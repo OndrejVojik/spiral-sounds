@@ -26,8 +26,16 @@ export async function getProducts(req, res) {
     const db = await getDBConnection()
 
     let query = 'SELECT * FROM products'
+    let params = []
 
-    const products = await db.all(query)
+    const { genre } = req.query
+
+    if (genre) {
+      query += ' WHERE genre = ?'
+      params.push(genre)
+    }
+ 
+    const products = await db.all(query, params)
 
     res.json(products)
 
